@@ -16,11 +16,24 @@ namespace FluentDOM
         public bool? IsNew { get; set; }
         public string PropertyName { get; set; }
         public string PropertyType { get; set; }
-        public List<AttributeBuilder> Attributes { get; set; }
-        public PropertyGetterSetterBuilder Get { get; set; }
-        public PropertyGetterSetterBuilder Set { get; set; }
+        public List<AttributeBuilder> Attributes { get; set; } = new List<AttributeBuilder>();
+        public PropertyGetterSetterBuilder Get { get; set; } = new PropertyGetterSetterBuilder();
+        public PropertyGetterSetterBuilder Set { get; set; } = new PropertyGetterSetterBuilder();
+        public bool? HasGet { get; set; }
+        public bool? HasSet { get; set; }
+        public bool? IsOverride { get; set; }
 
 
+        public PropertyBuilder HasGetMethod()
+        {
+            HasGet = true;
+            return this;
+        }
+        public PropertyBuilder HasSetMethod()
+        {
+            HasSet = true;
+            return this;
+        }
         public PropertyBuilder Name(string name)
         {
             PropertyName = name;
@@ -32,10 +45,20 @@ namespace FluentDOM
             PropertyType = type;
             return this;
         }
+        public PropertyBuilder Type<T>()
+        {
+            PropertyType = typeof(T).FullName;
+            return this;
+        }
 
         public PropertyBuilder Public()
         {
             IsPublic = true;
+            return this;
+        }
+        public PropertyBuilder Override()
+        {
+            IsOverride = true;
             return this;
         }
         public PropertyBuilder Private()

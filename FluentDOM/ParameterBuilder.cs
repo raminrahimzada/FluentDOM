@@ -23,6 +23,11 @@ namespace FluentDOM
             ParameterType = type;
             return this;
         }
+        public ParameterBuilder Type<T>()
+        {
+            ParameterType = typeof(T).FullName;
+            return this;
+        }
 
         public ParameterBuilder In()
         {

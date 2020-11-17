@@ -103,10 +103,15 @@ namespace FluentDOM
             ReturnType = returnType;
             return this;
         }
+        public MethodBuilder Returns<T>()
+        {
+            ReturnType = typeof(T).FullName;
+            return this;
+        }
         
         public MethodBuilder ReturnsVoid()
         {
-            Returns("void");
+            Returns(null);
             return this;
         }
     }

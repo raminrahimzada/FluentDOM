@@ -1,9 +1,18 @@
 ﻿using System;
+using System.CodeDom;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
+using Microsoft.CSharp;
+using Newtonsoft.Json;
 
 namespace FluentDOM.ConsoleApp
 {
@@ -29,15 +38,16 @@ namespace FluentDOM.ConsoleApp
                    c.Name("RaminClass")
                        .Public()
                        .Private()
-                       .Protected()
                        .Internal()
                        .Static()
                        .Sealed()
                        .Abstract()
                        .Partial()
-                       .Inherits("object")
+                       .Inherits<object>()
                        .Implements("IDisposable")
                        .Implements("IRaminClass")
+                       
+                       .AddAttribute(a=>a.Name("DatabaseModel").AddParameter(p=>p.Name("version").Value("1.5")))
 
                        .AddEvent(e => e.Name("Badimcan").Type("Function")
                            .Public()
@@ -55,8 +65,9 @@ namespace FluentDOM.ConsoleApp
                                    .AddAttribute(ctpa => ctpa.Name("Display").AddParameter(_p => _p.Name("Name").Value("Zirt")))
                        ))
 
-                       .AddProperty(p => p.Name("Value").Type("int")
+                       .AddProperty(p => p.Name("Value").Type<int>()
                            .Public()
+                           .Override()
                            .New()
                            .Partial()
                            .Sealed()
@@ -65,6 +76,9 @@ namespace FluentDOM.ConsoleApp
                            .Private()
                            .Protected()
                            .Internal()
+                           .AddAttribute(a=>a.Name("Required"))
+                           .HasGetMethod()
+                           .HasSetMethod()
                            .Getter(g =>
                            {
                                g.Default();
@@ -110,7 +124,7 @@ namespace FluentDOM.ConsoleApp
                            .Parameter(
                                p => p
                                    .Name("xx")
-                                   .Type("double")
+                                   .Type<double>()
                                    .In()
                                    .Out()
                                    .Ref()
@@ -136,7 +150,7 @@ namespace FluentDOM.ConsoleApp
                            .AddParameter(
                                p => p
                                    .Name("x")
-                                   .Type("int")
+                                   .Type<int>()
                                    .In()
                                    .Out()
                                    .Ref()
@@ -152,6 +166,45 @@ namespace FluentDOM.ConsoleApp
                        );
                });
             ;
+            var provider = new CSharpCodeProvider();
+            string source = @"
+using System;
+namespace SomeNamespace 
+{
+  public class Class0
+  {     
+//xiyar
+  }
+}";
+            ////var u = provider.Parse(new StringReader(source));
+            //;
+            //SyntaxTree tree = Microsoft.CodeAnalysis.CSharp.SyntaxFactory.ParseSyntaxTree(SourceText.From(source));
+            //var root = tree.GetCompilationUnitRoot();
+            //JsonSerializerSettings settings = new JsonSerializerSettings()
+            //{
+            //    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            //};
+            //var json = JsonConvert.SerializeObject(root,settings);
+
+            //;
+            CodeCompileUnit unit=new CodeCompileUnit();
+            var nameSpace1 = Compiler.Compile(lib);
+            unit.Namespaces.Add(nameSpace1);
+            File.WriteAllText(@"lib.json", JsonConvert.SerializeObject(lib));
+            GenerateCSharpCode(unit, @"lib.cs");
         }
+        public static string GenerateCSharpCode(CodeCompileUnit compileUnit, string sourceFile)
+        {
+            var provider = new CSharpCodeProvider();
+            using (StreamWriter sw = new StreamWriter(sourceFile, false))
+            {
+                IndentedTextWriter tw = new IndentedTextWriter(sw, "    ");
+                provider.GenerateCodeFromCompileUnit(compileUnit, tw,
+                    new CodeGeneratorOptions());
+                tw.Close();
+            }
+            return sourceFile;
+        }
+
     }
 }

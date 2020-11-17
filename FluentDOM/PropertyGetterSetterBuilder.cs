@@ -14,9 +14,4 @@ namespace FluentDOM
             return this;
         }
     }
-
-    public class StatementsBuilder
-    {
-
-    }
 }

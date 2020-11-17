@@ -1,4 +1,8 @@
-﻿namespace FluentDOM
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+
+namespace FluentDOM
 {
     public class InterfaceBuilder
     {
@@ -8,10 +12,19 @@
         public bool? IsPrivate { get; set; }
         public bool? IsInternal { get; set; }
         public bool? IsProtected { get; set; }
+        public List<AttributeBuilder> Attributes { get; set; } = new List<AttributeBuilder>();
 
         public InterfaceBuilder Name(string name)
         {
             InterfaceName = name;
+            return this;
+        }
+        public InterfaceBuilder AddAttribute(Action<AttributeBuilder> func)
+        {
+            Attributes = Attributes ?? new List<AttributeBuilder>();
+            var attribute = new AttributeBuilder();
+            func(attribute);
+            Attributes.Add(attribute);
             return this;
         }
         public InterfaceBuilder Public()

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace FluentDOM
@@ -10,7 +11,6 @@ namespace FluentDOM
         public bool? IsPartial { get; set; }
         public bool? IsPrivate { get; set; }
         public bool? IsInternal { get; set; }
-        public bool? IsProtected { get; set; }
         public bool? IsAbstract { get; set; }
         public bool? IsSealed { get; set; }
         public bool? IsStatic { get; set; }
@@ -24,6 +24,7 @@ namespace FluentDOM
         public List<PropertyBuilder> Properties { get; set; }
         public List<FieldBuilder> Fields { get; set; }
         public List<string> Interfaces { get; set; }
+        public List<AttributeBuilder> Attributes { get; set; }
 
 
         public ClassBuilder Name(string className)
@@ -79,11 +80,6 @@ namespace FluentDOM
             return this;
         }
 
-        public ClassBuilder Protected()
-        {
-            IsProtected = true;
-            return this;
-        }
         public ClassBuilder Internal()
         {
             IsInternal = true;
@@ -112,6 +108,11 @@ namespace FluentDOM
         public ClassBuilder Inherits(string baseClass)
         {
             BaseClass = baseClass;
+            return this;
+        }
+        public ClassBuilder Inherits<T>()
+        {
+            BaseClass = typeof(T).FullName;
             return this;
         }
 
@@ -152,6 +153,13 @@ namespace FluentDOM
             Events.Add(Event);
             return this;
         }
-
+        public ClassBuilder AddAttribute(Action<AttributeBuilder> func)
+        {
+            Attributes = Attributes ?? new List<AttributeBuilder>();
+            var attribute = new AttributeBuilder();
+            func(attribute);
+            Attributes.Add(attribute);
+            return this;
+        }
     }
 }
