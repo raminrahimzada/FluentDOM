@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30711.63
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentDOM.ConsoleApp", "FluentDOM.ConsoleApp\FluentDOM.ConsoleApp.csproj", "{A04716BB-CA95-4EB3-921D-465EBEFB043C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentDOM", "FluentDOM\FluentDOM.csproj", "{035756BF-E7C8-430F-ADBE-2DE1CC70EB7F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A04716BB-CA95-4EB3-921D-465EBEFB043C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A04716BB-CA95-4EB3-921D-465EBEFB043C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A04716BB-CA95-4EB3-921D-465EBEFB043C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A04716BB-CA95-4EB3-921D-465EBEFB043C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{035756BF-E7C8-430F-ADBE-2DE1CC70EB7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{035756BF-E7C8-430F-ADBE-2DE1CC70EB7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{035756BF-E7C8-430F-ADBE-2DE1CC70EB7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{035756BF-E7C8-430F-ADBE-2DE1CC70EB7F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4A05DC26-941D-4DD8-B7EE-CE7AFD8664EF}
+	EndGlobalSection
+EndGlobal
