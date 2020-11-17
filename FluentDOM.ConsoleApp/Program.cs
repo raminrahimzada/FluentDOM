@@ -161,8 +161,9 @@ namespace FluentDOM.ConsoleApp
                            )
                            .Body(b =>
                            {
-                                //TODO
-                            })
+                               b.Return();
+                               b.Return((short)41);
+                           })
                        );
                });
             ;

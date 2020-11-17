@@ -115,9 +115,41 @@ namespace FluentDOM.ConsoleApp
                 method.Parameters.Add(p);
             }
 
-            CodeStatement x = new CodeMethodReturnStatement(new CodePrimitiveExpression("xiyar"));
-            method.Statements.Add(x);
+            foreach (var abstractStatementBuilder in methodBuilder.MethodBody.Statements)
+            {
+                CodeStatement expression=CompileStatement(abstractStatementBuilder);
+                method.Statements.Add(expression);
+            }
+            
             return method;
+        }
+        //todo think about that :)
+        private static CodeStatement CompileStatement(AbstractStatementBuilder abstractStatementBuilder)
+        {
+            switch (abstractStatementBuilder)
+            {
+                case EmptyReturnStatementBuilder e: return CompileStatement(e);
+                case PrimitiveReturnStatementBuilder e: return CompileStatement(e);
+            }
+
+            throw new NotImplementedException("This Builder is not implemented");
+        }
+        private static CodeStatement CompileStatement(EmptyReturnStatementBuilder _)
+        {
+            return new CodeMethodReturnStatement();
+        }
+        private static CodeStatement CompileStatement(PrimitiveReturnStatementBuilder statement)
+        {
+            return new CodeMethodReturnStatement(new CodePrimitiveExpression(statement.Expression));
+        }
+        private static CodeStatement CompileStatement(ComplexReturnStatementBuilder statement)
+        {
+            return new CodeMethodReturnStatement(CompileExpression(statement.Statement));
+        }
+
+        private static CodeExpression CompileExpression(AbstractStatementBuilder statement)
+        {
+            throw new NotImplementedException();
         }
 
         private static CodeMemberProperty CompileProperty(PropertyBuilder propertyBuilder)
