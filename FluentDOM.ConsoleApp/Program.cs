@@ -15,7 +15,8 @@ namespace FluentDOM.ConsoleApp
                .New("Ramin")
                .AddUsing("System")
                .AddUsing("System.ComponentModel.DataAnnotations")
-               .AddAttribute(a=>a.Name("AssemblyVersion").Parameters(p=>p.Name("version").Value("1.0.0")))
+               .AddAttribute(a=>a.Name("AssemblyVersion").AddParameter(p=>p.Name("version").Value("1.0.0")))
+               .AddStruct(s=>s.Name("ValueObject"))
                .AddInterface(i => i.Name("IRaminClass")
                    .Public()
                    .Private()
@@ -51,12 +52,16 @@ namespace FluentDOM.ConsoleApp
                        .AddConstructor(ct => ct
                            .AddParameter(
                                ctp => ctp.Name("value").Type("")
-                                   .AddAttribute(ctpa => ctpa.Name("Display").Parameters(_p => _p.Name("Name").Value("Zirt")))
+                                   .AddAttribute(ctpa => ctpa.Name("Display").AddParameter(_p => _p.Name("Name").Value("Zirt")))
                        ))
 
                        .AddProperty(p => p.Name("Value").Type("int")
                            .Public()
                            .New()
+                           .Partial()
+                           .Sealed()
+                           .Abstract()
+                           .Static()
                            .Private()
                            .Protected()
                            .Internal()
@@ -74,12 +79,16 @@ namespace FluentDOM.ConsoleApp
                        .AddField(p => p.Name("Value").Type("int")
                            .Public()
                            .New()
+                           .Partial()
+                           .Static()
+                           .Sealed()
                            .Private()
                            .Protected()
                            .Internal()
-                           .Attributes(da => da
+                           .Abstract()
+                           .AddAttribute(da => da
                                .Name("FromBody")
-                               .Parameters(ap => ap.Name("Name").Value("first parameter of Delegate"))
+                               .AddParameter(ap => ap.Name("Name").Value("first parameter of Delegate"))
                            )
                        )
                        .AddDelegate(d => d
@@ -88,11 +97,15 @@ namespace FluentDOM.ConsoleApp
                            .Public()
                            .New()
                            .Private()
+                           .Partial()
+                           .Static()
+                           .Sealed()
                            .Protected()
                            .Internal()
+                           .Abstract()
                            .AddAttribute(da => da
                                .Name("Display")
-                               .Parameters(ap => ap.Name("Name").Value("this is delegate"))
+                               .AddParameter(ap => ap.Name("Name").Value("this is delegate"))
                            )
                            .Parameter(
                                p => p
@@ -103,7 +116,7 @@ namespace FluentDOM.ConsoleApp
                                    .Ref()
                                    .AddAttribute(a => a
                                        .Name("FromBody")
-                                       .Parameters(ap => ap.Name("Name").Value("first parameter of Delegate"))
+                                       .AddParameter(ap => ap.Name("Name").Value("first parameter of Delegate"))
                                    )
                            )
                        )
@@ -114,12 +127,13 @@ namespace FluentDOM.ConsoleApp
                            .Protected()
                            .Internal()
                            .Static()
+                           .Override()
                            .Sealed()
                            .Abstract()
                            .Partial()
                            .Returns("int")
                            .ReturnsVoid()
-                           .Parameter(
+                           .AddParameter(
                                p => p
                                    .Name("x")
                                    .Type("int")
@@ -128,7 +142,7 @@ namespace FluentDOM.ConsoleApp
                                    .Ref()
                                    .AddAttribute(a => a
                                        .Name("FromBody")
-                                       .Parameters(ap => ap.Name("Name").Value("first parameter"))
+                                       .AddParameter(ap => ap.Name("Name").Value("first parameter"))
                                    )
                            )
                            .Body(b =>

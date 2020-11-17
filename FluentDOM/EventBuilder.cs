@@ -2,14 +2,14 @@
 {
     public class EventBuilder
     {
-        public bool IsPublic { get; set; }
-        public bool IsPartial { get; set; }
-        public bool IsPrivate { get; set; }
-        public bool IsInternal { get; set; }
-        public bool IsProtected { get; set; }
-        public bool IsAbstract { get; set; }
-        public bool IsSealed { get; set; }
-        public bool IsStatic { get; set; }
+        public bool? IsPublic { get; set; }
+        public bool? IsPartial { get; set; }
+        public bool? IsPrivate { get; set; }
+        public bool? IsInternal { get; set; }
+        public bool? IsProtected { get; set; }
+        public bool? IsAbstract { get; set; }
+        public bool? IsSealed { get; set; }
+        public bool? IsStatic { get; set; }
         public string EventName { get; set; }
         public string EventType { get; set; }
 
