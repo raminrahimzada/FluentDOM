@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using FluentDOM.ConsoleApp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -8,230 +9,97 @@ namespace FluentDOM.Tests
     public class UnitTestAll
     {
         [TestMethod]
-        public void Test_NameSpace()
+        public void Test_Hello_World()
         {
-            var lib = NamespaceModel
-                .New("example1")
-               ;
-            var source = Compiler.Compile(lib).GenerateCSharpCode();
-            source.ShouldBeLike(@"
-namespace example1 
-{    
-}
-");
-        }
-        [TestMethod]
-        public void Test_Empty_Class_Public()
-        {
-            var lib = NamespaceModel
-                .New("example1")
+            var unit = new CodeCompileUnit();
+            unit
+                .Namespace("example1")
+                .Import("System")
+                .Import("System.IO")
                 .AddClass(c => c
-                    .Name("Class1")
-                    .Public()
+                    .Name("Program")
+                    .Attributes(MemberAttributes.Public | MemberAttributes.Static)
+                    .AddMethod(m =>
+                    {
+                        m.Name("Main")
+                            .Attributes(MemberAttributes.Public | MemberAttributes.Static)
+                            .AddParameter(p => p
+                                .Name("args")
+                                .OfType<string[]>()
+                                .Direction(FieldDirection.In)
+                            )
+                            .AddStatement(s => s
+                                .Declare("name")
+                                .OfType<string>()
+                                .Init(ss => ss.Invoke(null, "Console.ReadLine"))
+                            )
+                            .AddStatement(s => s
+                                .Invoke(null, "Console.WriteLine", s.Primitive("Hello - {0}"), s.Expression(e => e.Variable("name")))
+                            )
+                            .AddStatement(
+                                s => s
+                                    .Return(
+                                        s.Primitive(0)
+                                    )
+                            );
+                    })
                 );
-            var source = Compiler.Compile(lib).GenerateCSharpCode();
-            source.ShouldBeLike(@"
+            unit.GenerateCSharpCode().ShouldBeLike(@"
 namespace example1 {
-    public class Class1
-    {
+    using System;
+    using System.IO;
+    
+    
+    public class Program {
+        
+        public static void Main(string[] args) {
+            string name = Console.ReadLine();
+            Console.WriteLine(""Hello - {0}"", name);
+            return 0;
+        }
     }
 }
-");
-        }
-        [TestMethod]
-        public void Test_EmptyClass_Private()
-        {
-            var lib = NamespaceModel
-                .New("example1")
-                .AddClass(c => c
-                    .Name("Class1")
-                    .Private()
-                );
-            var source = Compiler.Compile(lib).GenerateCSharpCode();
-            source.ShouldBeLike(@"
-namespace example1 {
-    private class Class1
-    {
-    }
-}
-");
-        }
-        [TestMethod]
-        public void Test_EmptyClass_Static()
-        {
-            var lib = NamespaceModel
-                .New("example1")
-                .AddClass(c => c
-                    .Name("Class1")
-                    .Public()
-                    .Static()
-                );
-            var source = Compiler.Compile(lib).GenerateCSharpCode();
-            //https://social.msdn.microsoft.com/Forums/vstudio/en-US/609fbe5e-305a-45bb-9626-af7fa2c79c6d/codetypedeclaration-a-static-class?forum=netfxbcl
-            //seems nothing to do 
-            source.ShouldBeLike(@"
-namespace example1 {
-    public sealed abstract class Class1
-    {
-    }
-}
-");
-        }
-        [TestMethod]
-        public void Test_EmptyClass_Single_Method()
-        {
-            var lib = NamespaceModel
-                .New("example1")
-                .AddClass(c => c
-                    .Name("Class1")
-                    .Public()
-                    .AddMethod(m=>m
-                        .Name("DoSomething")
-                    )
-                );
-            var source = Compiler.Compile(lib).GenerateCSharpCode();
-            source.ShouldBeLike(@"
-namespace example1 {
-    public class Class1
-    {
-        void DoSomething()
-        {
 
-        }
-    }
-}
 ");
         }
-        [TestMethod]
-        public void Test_EmptyClass_Single_Method_Public()
-        {
-            var lib = NamespaceModel
-                .New("example1")
-                .AddClass(c => c
-                    .Name("Class1")
-                    .Public()
-                    .AddMethod(m=>m
-                        .Name("DoSomething")
-                        .Public()
-                    )
-                );
-            lib.Classes[0].Methods[0].IsOverride = false;
-            var source = Compiler.Compile(lib).GenerateCSharpCode();
-            source.ShouldBeLike(@"
-namespace example1 {
-    public class Class1
-    {
-        public void DoSomething()
-        {
 
-        }
-    }
-}
-");
-        }
         [TestMethod]
-        public void Test_EmptyClass_Single_Method_Private()
+        public void Test_Property_WithBackingField()
         {
-            var lib = NamespaceModel
-                .New("example1")
-                .AddClass(c => c
-                    .Name("Class1")
-                    .Public()
-                    .AddMethod(m=>m
-                        .Name("DoSomething")
-                        .Private()
-                    )
-                );
-            var source = Compiler.Compile(lib).GenerateCSharpCode();
-            source.ShouldBeLike(@"
-namespace example1 {
-    public class Class1
-    {
-        private void DoSomething()
-        {
+            var c = new CodeTypeDeclaration("TestClass")
+                    .Name("TestClass")
+                    .Attributes(MemberAttributes.Public | MemberAttributes.Static)
+                    .AddField(f => f.Name("_d3").OfType<string>())
+                    .AddProperty(p =>
+                    {
+                        p
+                            .Name("d3")
+                            .OfType<string>()
+                            .AddAttribute(attr => attr
+                                .OfType("Range")
+                                .AddArgument(a => a.Value(w => w.Primitive(long.MinValue)))
+                                .AddArgument(a => a.Value(w => w.Primitive(long.MaxValue)))
+                                .AddArgument(a => a.Name("ErrorMessage").Value(w => w.Primitive("Out Of Range")))
+                            )
+                            .Get(s => s.Return(s.Variable("_d3")))
+                            .Set(s => s.Assign(s.Variable("_d3"), s.Variable("value")));
+                    })
+                ;
+            c.GenerateCSharpCode().ShouldBeLike(@"
+public class TestClass {
 
-        }
-    }
-}
-");
-        }
-        [TestMethod]
-        public void Test_EmptyClass_Single_Method_Override()
-        {
-            var lib = NamespaceModel
-                .New("example1")
-                .AddClass(c => c
-                    .Name("Class1")
-                    .Public()
-                    .AddMethod(m=>m
-                        .Name("DoSomething")
-                        .Override()
-                    )
-                );
-            var source = Compiler.Compile(lib).GenerateCSharpCode();
-            source.ShouldBeLike(@"
-namespace example1 {
-    public class Class1
-    {
-        override void DoSomething()
-        {
+    private string _d3;
 
-        }
-    }
-}
-");
-        }
-        [TestMethod]
-        public void Test_EmptyClass_Single_Method_Override_Public()
-        {
-            var lib = NamespaceModel
-                .New("example1")
-                .AddClass(c => c
-                    .Name("Class1")
-                    .Public()
-                    .AddMethod(m=>m
-                        .Name("DoSomething")
-                        .Public()
-                        .Override()
-                    )
-                );
-            var source = Compiler.Compile(lib).GenerateCSharpCode();
-            source.ShouldBeLike(@"
-namespace example1 {
-    public class Class1
+    [Range(-9223372036854775808, 9223372036854775807, ErrorMessage=""Out Of Range"")]
+    private string d3
     {
-        public override void DoSomething()
+        get
         {
-
+            return _d3;
         }
-    }
-}
-");
-        }
-        [TestMethod]
-        public void Test_EmptyClass_Single_Method_Public_Static()
+        set
         {
-            var lib = NamespaceModel
-                .New("example1")
-                .AddClass(c => c
-                    .Name("Class1")
-                    .Public()
-                    .AddMethod(m=>m
-                        .Name("DoSomething")
-                        .Public()
-                        .Static()
-                    )
-                );
-            var source = Compiler.Compile(lib).GenerateCSharpCode();
-            //https://social.msdn.microsoft.com/Forums/vstudio/en-US/609fbe5e-305a-45bb-9626-af7fa2c79c6d/codetypedeclaration-a-static-class?forum=netfxbcl
-            //seems nothing to do 
-            source.ShouldBeLike(@"
-namespace example1 {
-    public class Class1
-    {
-        public static void DoSomething()
-        {
-
+            _d3 = value;
         }
     }
 }
