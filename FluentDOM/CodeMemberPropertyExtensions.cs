@@ -5,6 +5,11 @@ namespace FluentDOM
 {
     public static class CodeMemberPropertyExtensions
     {
+        public static CodeMemberProperty Attributes(this CodeMemberProperty property, MemberAttributes attributes)
+        {
+            property.Attributes = attributes;
+            return property;
+        }
         public static CodeMemberProperty Name(this CodeMemberProperty property, string name)
         {
             property.Name = name;
@@ -13,6 +18,11 @@ namespace FluentDOM
         public static CodeMemberProperty OfType<T>(this CodeMemberProperty property)
         {
             property.Type = new CodeTypeReference(typeof(T));
+            return property;
+        }
+        public static CodeMemberProperty AddComment(this CodeMemberProperty property,string comment)
+        {
+            property.Comments.Add(new CodeCommentStatement(comment));
             return property;
         }
         public static CodeMemberProperty AddAttribute(this CodeMemberProperty property,Action<CodeAttributeDeclaration> action)
@@ -24,6 +34,11 @@ namespace FluentDOM
         }
         public static CodeMemberProperty Get(this CodeMemberProperty property,Action<CodeStatementCollectionBuilder> action)
         {
+            if (action == null)
+            {
+                property.HasGet = false;
+                return property;
+            }
             var a = new CodeStatementCollectionBuilder();
             action(a);
             property.GetStatements.AddRange(a.Build());
@@ -31,6 +46,11 @@ namespace FluentDOM
         }
         public static CodeMemberProperty Set(this CodeMemberProperty property,Action<CodeStatementCollectionBuilder> action)
         {
+            if (action == null)
+            {
+                property.HasSet = false;
+                return property;
+            }
             var a = new CodeStatementCollectionBuilder();
             action(a);
             property.SetStatements.AddRange(a.Build());

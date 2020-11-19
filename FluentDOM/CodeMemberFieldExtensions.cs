@@ -14,5 +14,15 @@ namespace FluentDOM
             field.Type = new CodeTypeReference(typeof(T));
             return field;
         }
+        public static CodeMemberField Attributes(this CodeMemberField field, MemberAttributes attributes)
+        {
+            field.Attributes = attributes;
+            return field;
+        }
+        public static CodeMemberField AddComment(this CodeMemberField field, string comment)
+        {
+            field.Comments.Add(new CodeCommentStatement(comment));
+            return field;
+        }
     }
 }

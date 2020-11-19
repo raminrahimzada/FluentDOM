@@ -10,11 +10,14 @@ namespace FluentDOM
             statement.Type = new CodeTypeReference(typeof(T));
             return statement;
         }
-        public static CodeVariableDeclarationStatement Init(this CodeVariableDeclarationStatement statement,Action<CodeExpressionBuilder> action)
+        public static CodeVariableDeclarationStatement OfType(this CodeVariableDeclarationStatement statement,string type)
         {
-            var ss=new CodeExpressionBuilder();
-            action(ss);
-            statement.InitExpression = ss.Build();
+            statement.Type = new CodeTypeReference(type);
+            return statement;
+        }
+        public static CodeVariableDeclarationStatement Init(this CodeVariableDeclarationStatement statement,CodeExpression expression)
+        {
+            statement.InitExpression = expression;
             return statement;
         }
     }

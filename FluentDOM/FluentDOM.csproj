@@ -45,6 +45,7 @@
     <Compile Include="CodeAttributeArgumentExtensions.cs" />
     <Compile Include="CodeAttributeDeclarationExtensions.cs" />
     <Compile Include="CodeCompileUnitExtensions.cs" />
+    <Compile Include="CodeEntryPointMethodExtensions.cs" />
     <Compile Include="CodeExpressionBuilder.cs" />
     <Compile Include="CodeMemberFieldExtensions.cs" />
     <Compile Include="CodeMemberMethodExtensions.cs" />
@@ -56,6 +57,7 @@
     <Compile Include="CodeVariableDeclarationStatementExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CodeStatementBuilder.cs" />
+    <Compile Include="_.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

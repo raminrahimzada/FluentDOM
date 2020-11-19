@@ -21,11 +21,6 @@ namespace FluentDOM
             _codeStatementCollection.Add(new CodeMethodReturnStatement(b));
         }
 
-        public CodeVariableReferenceExpression Variable(string varName)
-        {
-            return new CodeVariableReferenceExpression(varName);
-        }
-
         public void Assign(CodeExpression left, CodeExpression right)
         {
             _codeStatementCollection.Add(new CodeAssignStatement(left, right));

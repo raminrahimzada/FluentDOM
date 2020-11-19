@@ -27,11 +27,6 @@ namespace FluentDOM
             return expression;
         }
 
-        public CodePrimitiveExpression Primitive(object value)
-        {
-            return new CodePrimitiveExpression(value);
-        }
-
         public CodeVariableDeclarationStatement Declare(string name)
         {
             var statement=new CodeVariableDeclarationStatement();
@@ -40,13 +35,10 @@ namespace FluentDOM
             return statement;
         }
 
-        public CodeExpression Expression(Action<CodeExpressionBuilder> action)
+        public void Assign(CodeExpression left, CodeExpression right)
         {
-            var b = new CodeExpressionBuilder();
-            action(b);
-            return b.Build();
+            var a = new CodeAssignStatement(left, right);
+            _statement = a;
         }
-
-        
     }
 }

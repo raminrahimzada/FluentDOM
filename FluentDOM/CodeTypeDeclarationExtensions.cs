@@ -1,10 +1,16 @@
 ﻿using System;
 using System.CodeDom;
+using System.Reflection;
 
 namespace FluentDOM
 {
     public static class CodeTypeDeclarationExtensions
     {
+        public static CodeTypeDeclaration TypeAttributes(this CodeTypeDeclaration classType, TypeAttributes attribute)
+        {
+            classType.TypeAttributes = attribute;
+            return classType;
+        }
         public static CodeTypeDeclaration Attributes(this CodeTypeDeclaration classType, MemberAttributes attribute)
         {
             classType.Attributes = attribute;
@@ -18,6 +24,20 @@ namespace FluentDOM
         public static CodeTypeDeclaration AddMethod(this CodeTypeDeclaration classType, Action<CodeMemberMethod> func)
         {
             var m = new CodeMemberMethod();
+            func(m);
+            classType.Members.Add(m);
+            return classType;
+        }
+        public static CodeTypeDeclaration AddEntryPoint(this CodeTypeDeclaration classType, Action<CodeEntryPointMethod> func)
+        {
+            var m = new CodeEntryPointMethod();
+            func(m);
+            classType.Members.Add(m);
+            return classType;
+        }
+        public static CodeTypeDeclaration AddConstructor(this CodeTypeDeclaration classType, Action<CodeConstructor> func)
+        {
+            var m = new CodeConstructor();
             func(m);
             classType.Members.Add(m);
             return classType;
@@ -36,5 +56,9 @@ namespace FluentDOM
             classType.Members.Add(p);
             return classType;
         }
-    }
+
+
+
+
+   }
 }

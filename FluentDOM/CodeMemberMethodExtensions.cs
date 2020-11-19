@@ -12,9 +12,15 @@ namespace FluentDOM
             method.Parameters.Add(p);
             return method;
         }
+        
         public static CodeMemberMethod Name(this CodeMemberMethod method, string name)
         {
             method.Name = name;
+            return method;
+        }
+        public static CodeMemberMethod Returns<T>(this CodeMemberMethod method)
+        {
+            method.ReturnType = new CodeTypeReference(typeof(T));
             return method;
         }
         public static CodeMemberMethod Attributes(this CodeMemberMethod method, MemberAttributes attribute)
@@ -30,5 +36,15 @@ namespace FluentDOM
             return method;
         }
 
+        public static CodeMemberMethod AddStatement(this CodeMemberMethod method, CodeStatement codeStatement)
+        {
+            method.Statements.Add(codeStatement);
+            return method;
+        }
+        public static CodeMemberMethod AddStatement(this CodeMemberMethod method, CodeExpression expression)
+        {
+            method.Statements.Add(new CodeExpressionStatement(expression));
+            return method;
+        }
     }
 }
