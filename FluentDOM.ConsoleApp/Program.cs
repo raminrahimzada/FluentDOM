@@ -53,7 +53,10 @@ namespace FluentDOM.ConsoleApp
                             .Set(null))
 
                         //method 1
-                        .AddMethod(m => m.Name("ToString").Returns<string>().AddStatement(s =>
+                        .AddMethod(m => m.Name("ToString")
+                            .Returns<string>()
+                            .Attributes(MemberAttributes.Public | MemberAttributes.Override)
+                            .AddStatement(s =>
                         {
                             var w = _.Field(_.This(), "widthValue");
                             var h = _.Field(_.This(), "heightValue");

@@ -20,30 +20,25 @@ namespace FluentDOM.Tests
                 .AddClass(c => c
                     .Name("Program")
                     .Attributes(MemberAttributes.Public | MemberAttributes.Static)
-                    .AddMethod(m =>
-                    {
-                        m.Name("Main")
-                            .Attributes(MemberAttributes.Public | MemberAttributes.Static)
-                            .AddParameter(p => p
-                                .Name("args")
-                                .OfType<string[]>()
-                                .Direction(FieldDirection.In)
-                            )
-                            .AddStatement(s => s
-                                .Declare("name")
-                                .OfType<string>()
-                                .Init(_.Invoke(null, "Console.ReadLine"))
-                            )
-                            .AddStatement(s => s
-                                .Invoke(null, "Console.WriteLine", _.Primitive("Hello - {0}"), _.Variable("name"))
-                            )
-                            .AddStatement(
-                                s => s
-                                    .Return(
-                                        _.Primitive(0)
-                                    )
-                            );
-                    })
+                    .AddMethod(m => m.Name("Main")
+                        .Attributes(MemberAttributes.Public | MemberAttributes.Static)
+                        .AddParameter(p => p
+                            .Name("args")
+                            .OfType<string[]>()
+                            .Direction(FieldDirection.In)
+                        )
+                        .AddStatement(s => s
+                            .Declare("name")
+                            .OfType<string>()
+                            .Init(_.Invoke(null, "Console.ReadLine"))
+                        )
+                        .AddStatement(s => s
+                            .Invoke(null, "Console.WriteLine", _.Primitive("Hello - {0}"), _.Variable("name"))
+                        )
+                        .AddStatement(
+                            s => s
+                                .Return(_.Primitive(0))
+                        ))
                 );
             unit.GenerateCSharpCode().ShouldBeLike(@"
 namespace example1 {
@@ -71,20 +66,17 @@ namespace example1 {
                     .Name("TestClass")
                     .Attributes(MemberAttributes.Public | MemberAttributes.Static)
                     .AddField(f => f.Name("_d3").OfType<string>())
-                    .AddProperty(p =>
-                    {
-                        p
-                            .Name("d3")
-                            .OfType<string>()
-                            .AddAttribute(attr => attr
-                                .OfType("Range")
-                                .AddArgument(a => a.Value(_.Primitive(long.MinValue)))
-                                .AddArgument(a => a.Value(_.Primitive(long.MaxValue)))
-                                .AddArgument(a => a.Name("ErrorMessage").Value(_.Primitive("Out Of Range")))
-                            )
-                            .Get(s => s.Return(_.Variable("_d3")))
-                            .Set(s => s.Assign(_.Variable("_d3"), _.Variable("value")));
-                    })
+                    .AddProperty(p => p
+                        .Name("d3")
+                        .OfType<string>()
+                        .AddAttribute(attr => attr
+                            .OfType("Range")
+                            .AddArgument(a => a.Value(_.Primitive(long.MinValue)))
+                            .AddArgument(a => a.Value(_.Primitive(long.MaxValue)))
+                            .AddArgument(a => a.Name("ErrorMessage").Value(_.Primitive("Out Of Range")))
+                        )
+                        .Get(s => s.Return(_.Variable("_d3")))
+                        .Set(s => s.Assign(_.Variable("_d3"), _.Variable("value"))))
                 ;
             c.GenerateCSharpCode().ShouldBeLike(@"
 public class TestClass {
@@ -156,7 +148,11 @@ public class TestClass {
                         .Set(null))
 
                     //method 1
-                    .AddMethod(m => m.Name("ToString").Returns<string>().AddStatement(s =>
+                    .AddMethod(m => m
+                        .Name("ToString")
+                        .Returns<string>()
+                        .Attributes(MemberAttributes.Public | MemberAttributes.Override)
+                        .AddStatement(s =>
                     {
                         var w = _.Field(_.This(), "widthValue");
                         var h = _.Field(_.This(), "heightValue");
