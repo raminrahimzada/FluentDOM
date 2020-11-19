@@ -1,6 +1,5 @@
 ﻿using System;
 using System.CodeDom;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace FluentDOM.ConsoleApp
@@ -18,7 +17,7 @@ namespace FluentDOM.ConsoleApp
 
         //    return b;
         //}
-        public static CodeNamespace Compile(NamespaceBuilder b)
+        public static CodeNamespace Compile(NamespaceModel b)
         {
             var codeNamespace = new CodeNamespace(b.NameSpaceName);
             
@@ -28,18 +27,19 @@ namespace FluentDOM.ConsoleApp
             }
 
             //classes
-            foreach (ClassBuilder classBuilder in b.Classes)
+            foreach (ClassModel classBuilder in b.Classes)
             {
                 var classType = new CodeTypeDeclaration(classBuilder.ClassName)
                 {
                     IsClass = true, TypeAttributes = classBuilder.GetTypeAttributes()
                 };
-
                 foreach (var @interface in classBuilder.Interfaces)
                 {
                     classType.BaseTypes.Add(new CodeTypeReference(@interface));
                 }
-                classType.BaseTypes.Add(new CodeTypeReference(classBuilder.BaseClass));
+
+                if (!string.IsNullOrWhiteSpace(classBuilder.BaseClass))
+                    classType.BaseTypes.Add(new CodeTypeReference(classBuilder.BaseClass));
 
                 if (classBuilder.IsPartial != null) classType.IsPartial = classBuilder.IsPartial.Value;
 
@@ -86,10 +86,10 @@ namespace FluentDOM.ConsoleApp
             return codeNamespace;
         }
 
-        private static CodeAttributeDeclaration CompileAttribute(AttributeBuilder attributeBuilder)
+        private static CodeAttributeDeclaration CompileAttribute(AttributeModel attributeModel)
         {
-            var a = new CodeAttributeDeclaration(attributeBuilder.AttributeName);
-            foreach (var attributeParameterBuilder in attributeBuilder.Parameters)
+            var a = new CodeAttributeDeclaration(attributeModel.AttributeName);
+            foreach (var attributeParameterBuilder in attributeModel.Parameters)
             {
                 a.Arguments.Add(new CodeAttributeArgument(attributeParameterBuilder.ParameterName,
                     new CodePrimitiveExpression(attributeParameterBuilder.ParameterValue)));
@@ -98,15 +98,15 @@ namespace FluentDOM.ConsoleApp
             return a;
         }
 
-        private static CodeMemberMethod CompileMethod(MethodBuilder methodBuilder)
+        private static CodeMemberMethod CompileMethod(MethodModel methodModel)
         {
             var method = new CodeMemberMethod
             {
-                Name = methodBuilder.MethodName,
-                ReturnType = methodBuilder.GetReturnTypeReference(),
-                Attributes = methodBuilder.GetMemberAttribute()
+                Name = methodModel.MethodName,
+                ReturnType = methodModel.GetReturnTypeReference(),
+                Attributes = methodModel.GetMemberAttribute()
             };
-            foreach (var parameterBuilder in methodBuilder.Parameters)
+            foreach (var parameterBuilder in methodModel.Parameters)
             {
                 var p = new CodeParameterDeclarationExpression(parameterBuilder.ParameterType,
                     parameterBuilder.ParameterName);
@@ -115,7 +115,7 @@ namespace FluentDOM.ConsoleApp
                 method.Parameters.Add(p);
             }
 
-            foreach (var abstractStatementBuilder in methodBuilder.MethodBody.Statements)
+            foreach (var abstractStatementBuilder in methodModel.MethodBody.Statements)
             {
                 CodeStatement expression=CompileStatement(abstractStatementBuilder);
                 method.Statements.Add(expression);
@@ -124,49 +124,72 @@ namespace FluentDOM.ConsoleApp
             return method;
         }
         //todo think about that :)
-        private static CodeStatement CompileStatement(AbstractStatementBuilder abstractStatementBuilder)
+        private static CodeStatement CompileStatement(AbstractStatementModel abstractStatementModel)
         {
-            switch (abstractStatementBuilder)
+            switch (abstractStatementModel)
             {
-                case EmptyReturnStatementBuilder e: return CompileStatement(e);
-                case PrimitiveReturnStatementBuilder e: return CompileStatement(e);
+                case EmptyReturnStatementModel e: return CompileStatement(e);
+                case PrimitiveReturnStatementModel e: return CompileStatement(e);
+                case ComplexReturnStatementModel e: return CompileStatement(e);
             }
 
             throw new NotImplementedException("This Builder is not implemented");
         }
-        private static CodeStatement CompileStatement(EmptyReturnStatementBuilder _)
+        private static CodeStatement CompileStatement(EmptyReturnStatementModel _)
         {
             return new CodeMethodReturnStatement();
         }
-        private static CodeStatement CompileStatement(PrimitiveReturnStatementBuilder statement)
+        private static CodeStatement CompileStatement(PrimitiveReturnStatementModel statement)
         {
-            return new CodeMethodReturnStatement(new CodePrimitiveExpression(statement.Expression));
+            return new CodeMethodReturnStatement(new CodePrimitiveExpression(statement.GetValue()));
         }
-        private static CodeStatement CompileStatement(ComplexReturnStatementBuilder statement)
+        private static CodeStatement CompileStatement(ComplexReturnStatementModel statement)
         {
-            return new CodeMethodReturnStatement(CompileExpression(statement.Statement));
+            return new CodeMethodReturnStatement(CompileExpression(statement.Expression));
         }
 
-        private static CodeExpression CompileExpression(AbstractStatementBuilder statement)
+        private static CodeExpression CompileExpression(PrimitiveCodeExpressionModel expression)
         {
+            return new CodePrimitiveExpression(expression.GetValue());
+        }
+        private static CodeExpression CompileExpression(VariableExpressionModel expression)
+        {
+            return new CodeVariableReferenceExpression(expression.VariableName);
+        }
+        private static CodeExpression CompileExpression(BinaryOperationExpressionModel expression)
+        {
+            var left = CompileExpression(expression.Left);
+            var right = CompileExpression(expression.Right);
+            return new CodeBinaryOperatorExpression(left, expression.ExpressionType, right);
+        }
+        
+        private static CodeExpression CompileExpression(AbstractCodeExpressionModel expression)
+        {
+            switch (expression)
+            {
+                case PrimitiveCodeExpressionModel e: return CompileExpression(e);
+                case VariableExpressionModel e: return CompileExpression(e);
+                case BinaryOperationExpressionModel e: return CompileExpression(e);
+            }
+
             throw new NotImplementedException();
         }
 
-        private static CodeMemberProperty CompileProperty(PropertyBuilder propertyBuilder)
+        private static CodeMemberProperty CompileProperty(PropertyModel propertyModel)
         {
             var prop = new CodeMemberProperty();
-            if (propertyBuilder.HasGet != null)
-                prop.HasGet = propertyBuilder.HasGet.Value;
+            if (propertyModel.HasGet != null)
+                prop.HasGet = propertyModel.HasGet.Value;
 
-            if (propertyBuilder.HasSet != null)
-                prop.HasSet = propertyBuilder.HasSet.Value;
-            prop.Name = propertyBuilder.PropertyName;
-            prop.Type = propertyBuilder.GetTypeReference();
-            prop.Attributes = propertyBuilder.GetMemberAttribute();
-            prop.CustomAttributes.AddRange(propertyBuilder.Attributes.Select(CompileAttribute).ToArray());
+            if (propertyModel.HasSet != null)
+                prop.HasSet = propertyModel.HasSet.Value;
+            prop.Name = propertyModel.PropertyName;
+            prop.Type = propertyModel.GetTypeReference();
+            prop.Attributes = propertyModel.GetMemberAttribute();
+            prop.CustomAttributes.AddRange(propertyModel.Attributes.Select(CompileAttribute).ToArray());
 
             // https://stackoverflow.com/questions/13679171/how-to-generate-empty-get-set-statements-using-codedom-in-c-sharp
-            if (propertyBuilder.Get.IsDefault??false)
+            if (propertyModel.Get.IsDefault??false)
             {
 
             }

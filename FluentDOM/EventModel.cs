@@ -1,6 +1,6 @@
 ﻿namespace FluentDOM
 {
-    public class EventBuilder
+    public class EventModel
     {
         public bool? IsPublic { get; set; }
         public bool? IsPartial { get; set; }
@@ -13,59 +13,59 @@
         public string EventName { get; set; }
         public string EventType { get; set; }
 
-        public EventBuilder Public()
+        public EventModel Public()
         {
             IsPublic = true;
             return this;
         }
-        public EventBuilder Private()
+        public EventModel Private()
         {
             IsPrivate = true;
             return this;
         }
-        public EventBuilder Partial()
+        public EventModel Partial()
         {
             IsPartial = true;
             return this;
         }
-        public EventBuilder Protected()
+        public EventModel Protected()
         {
             IsProtected = true;
             return this;
         }
-        public EventBuilder Internal()
+        public EventModel Internal()
         {
             IsInternal = true;
             return this;
         }
 
-        public EventBuilder Name(string name)
+        public EventModel Name(string name)
         {
             EventName = name;
             return this;
         }
 
         
-        public EventBuilder Type(string type)
+        public EventModel Type(string type)
         {
             EventType = type;
             return this;
         }
 
 
-        public EventBuilder Static()
+        public EventModel Static()
         {
             IsStatic = true;
             return this;
         }
 
-        public EventBuilder Sealed()
+        public EventModel Sealed()
         {
             IsSealed = true;
             return this;
         }
 
-        public EventBuilder Abstract()
+        public EventModel Abstract()
         {
             IsAbstract = true;
             return this;

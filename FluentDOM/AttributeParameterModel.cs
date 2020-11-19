@@ -1,15 +1,15 @@
 ﻿namespace FluentDOM
 {
-    public class AttributeParameterBuilder
+    public class AttributeParameterModel
     {
         public string ParameterName { get; set; }
         public string ParameterValue { get; set; }
-        public AttributeParameterBuilder Name(string name)
+        public AttributeParameterModel Name(string name)
         {
             ParameterName = name;
             return this;
         }
-        public AttributeParameterBuilder Value(string value)
+        public AttributeParameterModel Value(string value)
         {
             ParameterValue = value;
             return this;

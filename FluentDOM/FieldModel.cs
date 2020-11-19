@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace FluentDOM
 {
-    public class FieldBuilder
+    public class FieldModel
     {
         public bool? IsPublic { get; set; }
         public bool? IsPartial { get; set; }
@@ -16,72 +16,72 @@ namespace FluentDOM
         public bool? IsNew { get; set; }
         public string FieldName { get; set; }
         public string FieldType { get; set; }
-        public List<AttributeBuilder> Attributes { get; set; }
+        public List<AttributeModel> Attributes { get; set; }
 
 
-        public FieldBuilder Name(string name)
+        public FieldModel Name(string name)
         {
             FieldName = name;
             return this;
         }
 
-        public FieldBuilder Type(string type)
+        public FieldModel Type(string type)
         {
             FieldType = type;
             return this;
         }
 
-        public FieldBuilder Public()
+        public FieldModel Public()
         {
             IsPublic = true;
             return this;
         }
-        public FieldBuilder Private()
+        public FieldModel Private()
         {
             IsPrivate = true;
             return this;
         }
-        public FieldBuilder Protected()
+        public FieldModel Protected()
         {
             IsProtected = true;
             return this;
         }
-        public FieldBuilder Internal()
+        public FieldModel Internal()
         {
             IsInternal = true;
             return this;
         }
 
 
-        public FieldBuilder New()
+        public FieldModel New()
         {
             IsNew = true;
             return this;
         }
-        public FieldBuilder Partial()
+        public FieldModel Partial()
         {
             IsPartial = true;
             return this;
         }
-        public FieldBuilder Static()
+        public FieldModel Static()
         {
             IsStatic = true;
             return this;
         }
-        public FieldBuilder Sealed()
+        public FieldModel Sealed()
         {
             IsSealed = true;
             return this;
         }
-        public FieldBuilder Abstract()
+        public FieldModel Abstract()
         {
             IsAbstract = true;
             return this;
         }
-        public FieldBuilder AddAttribute(Action<AttributeBuilder> func)
+        public FieldModel AddAttribute(Action<AttributeModel> func)
         {
-            Attributes = Attributes ?? new List<AttributeBuilder>();
-            var attribute = new AttributeBuilder();
+            Attributes = Attributes ?? new List<AttributeModel>();
+            var attribute = new AttributeModel();
             func(attribute);
             Attributes.Add(attribute);
             return this;

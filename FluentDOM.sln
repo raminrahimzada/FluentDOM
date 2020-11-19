@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentDOM.ConsoleApp", "Flu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentDOM", "FluentDOM\FluentDOM.csproj", "{035756BF-E7C8-430F-ADBE-2DE1CC70EB7F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentDOM.Tests", "FluentDOM.Tests\FluentDOM.Tests.csproj", "{8734093C-6E0A-4C3E-A54D-4E9D0F518460}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{035756BF-E7C8-430F-ADBE-2DE1CC70EB7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{035756BF-E7C8-430F-ADBE-2DE1CC70EB7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{035756BF-E7C8-430F-ADBE-2DE1CC70EB7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8734093C-6E0A-4C3E-A54D-4E9D0F518460}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8734093C-6E0A-4C3E-A54D-4E9D0F518460}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8734093C-6E0A-4C3E-A54D-4E9D0F518460}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8734093C-6E0A-4C3E-A54D-4E9D0F518460}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

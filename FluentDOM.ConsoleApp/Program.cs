@@ -20,7 +20,7 @@ namespace FluentDOM.ConsoleApp
     {
         static void Main(string[] args)
         {
-            var lib = NamespaceBuilder
+            var lib = NamespaceModel
                .New("Ramin")
                .AddUsing("System")
                .AddUsing("System.ComponentModel.DataAnnotations")
@@ -162,7 +162,19 @@ namespace FluentDOM.ConsoleApp
                            .Body(b =>
                            {
                                b.Return();
-                               b.Return((short)41);
+                               b.ReturnPrimitive<short>(41);
+                               var x = b.Variable("x");
+                               b.Return(x + x);
+                               b.Return(x - x);
+                               b.Return(x * x);
+                               b.Return(x / x);
+                               b.Return(x % x);
+                               b.Return(x > x);
+                               b.Return(x < x);
+                               b.Return(x >= x);
+                               b.Return(x <= x);
+                               b.Return(x == x);
+                               b.Return(x != x);
                            })
                        );
                });
@@ -189,23 +201,10 @@ namespace SomeNamespace
 
             //;
             CodeCompileUnit unit=new CodeCompileUnit();
-            var nameSpace1 = Compiler.Compile(lib);
+            CodeNamespace nameSpace1 = Compiler.Compile(lib);
             unit.Namespaces.Add(nameSpace1);
             File.WriteAllText(@"lib.json", JsonConvert.SerializeObject(lib));
-            GenerateCSharpCode(unit, @"lib.cs");
+            File.WriteAllText(@"lib.cs", nameSpace1.GenerateCSharpCode());
         }
-        public static string GenerateCSharpCode(CodeCompileUnit compileUnit, string sourceFile)
-        {
-            var provider = new CSharpCodeProvider();
-            using (StreamWriter sw = new StreamWriter(sourceFile, false))
-            {
-                IndentedTextWriter tw = new IndentedTextWriter(sw, "    ");
-                provider.GenerateCodeFromCompileUnit(compileUnit, tw,
-                    new CodeGeneratorOptions());
-                tw.Close();
-            }
-            return sourceFile;
-        }
-
     }
 }

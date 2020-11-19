@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace FluentDOM
 {
-    public class PropertyGetterSetterBuilder
+    public class PropertyGetterSetterModel
     {
         public bool? IsDefault { get; set; }
-        public PropertyGetterSetterBuilder Default()
+        public PropertyGetterSetterModel Default()
         {
             IsDefault = true;
             return this;

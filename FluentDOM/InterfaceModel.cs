@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace FluentDOM
 {
-    public class InterfaceBuilder
+    public class InterfaceModel
     {
         public string InterfaceName { get; set; }
         public bool? IsPublic { get; set; }
@@ -12,46 +12,46 @@ namespace FluentDOM
         public bool? IsPrivate { get; set; }
         public bool? IsInternal { get; set; }
         public bool? IsProtected { get; set; }
-        public List<AttributeBuilder> Attributes { get; set; } = new List<AttributeBuilder>();
+        public List<AttributeModel> Attributes { get; set; } = new List<AttributeModel>();
 
-        public InterfaceBuilder Name(string name)
+        public InterfaceModel Name(string name)
         {
             InterfaceName = name;
             return this;
         }
-        public InterfaceBuilder AddAttribute(Action<AttributeBuilder> func)
+        public InterfaceModel AddAttribute(Action<AttributeModel> func)
         {
-            Attributes = Attributes ?? new List<AttributeBuilder>();
-            var attribute = new AttributeBuilder();
+            Attributes = Attributes ?? new List<AttributeModel>();
+            var attribute = new AttributeModel();
             func(attribute);
             Attributes.Add(attribute);
             return this;
         }
-        public InterfaceBuilder Public()
+        public InterfaceModel Public()
         {
             IsPublic = true;
             return this;
         }
 
-        public InterfaceBuilder Partial()
+        public InterfaceModel Partial()
         {
             IsPartial = true;
             return this;
         }
 
-        public InterfaceBuilder Private()
+        public InterfaceModel Private()
         {
             IsPrivate = true;
             return this;
         }
 
-        public InterfaceBuilder Protected()
+        public InterfaceModel Protected()
         {
             IsProtected = true;
             return this;
         }
 
-        public InterfaceBuilder Internal()
+        public InterfaceModel Internal()
         {
             IsInternal = true;
             return this;

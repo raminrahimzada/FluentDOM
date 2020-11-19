@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace FluentDOM
 {
-    public class DelegateBuilder
+    public class DelegateModel
     {
         public bool? IsPublic { get; set; }
         public bool? IsPartial { get; set; }
@@ -16,56 +16,56 @@ namespace FluentDOM
         public string DelegateName { get; set; }
         public string DelegateType { get; set; }
         public bool? IsNew { get; set; }
-        public List<ParameterBuilder> Parameters { get; set; }
+        public List<ParameterModel> Parameters { get; set; }
 
-        public List<AttributeBuilder> Attributes { get; set; }
+        public List<AttributeModel> Attributes { get; set; }
 
 
-        public DelegateBuilder Public()
+        public DelegateModel Public()
         {
             IsPublic = true;
             return this;
         }
-        public DelegateBuilder Private()
+        public DelegateModel Private()
         {
             IsPrivate = true;
             return this;
         }
-        public DelegateBuilder Partial()
+        public DelegateModel Partial()
         {
             IsPartial = true;
             return this;
         }
-        public DelegateBuilder Protected()
+        public DelegateModel Protected()
         {
             IsProtected = true;
             return this;
         }
-        public DelegateBuilder Internal()
+        public DelegateModel Internal()
         {
             IsInternal = true;
             return this;
         }
-        public DelegateBuilder Abstract()
+        public DelegateModel Abstract()
         {
             IsAbstract = true;
             return this;
         }
 
-        public DelegateBuilder Name(string name)
+        public DelegateModel Name(string name)
         {
             DelegateName = name;
             return this;
         }
         
-        public DelegateBuilder ReturnType(string returnType)
+        public DelegateModel ReturnType(string returnType)
         {
             DelegateType = returnType;
             return this;
         }
 
 
-        public DelegateBuilder New()
+        public DelegateModel New()
         {
             IsNew = true;
             return this;
@@ -73,32 +73,32 @@ namespace FluentDOM
 
         
 
-        public DelegateBuilder Parameter(Action<ParameterBuilder> func)
+        public DelegateModel Parameter(Action<ParameterModel> func)
         {
-            Parameters = Parameters ?? new List<ParameterBuilder>();
-            var p = new ParameterBuilder();
+            Parameters = Parameters ?? new List<ParameterModel>();
+            var p = new ParameterModel();
             func(p);
             Parameters.Add(p);
             return this;
         }
 
-        public DelegateBuilder AddAttribute(Action<AttributeBuilder> func)
+        public DelegateModel AddAttribute(Action<AttributeModel> func)
         {
-            Attributes = Attributes ?? new List<AttributeBuilder>();
-            var attribute = new AttributeBuilder();
+            Attributes = Attributes ?? new List<AttributeModel>();
+            var attribute = new AttributeModel();
             func(attribute);
             Attributes.Add(attribute);
             return this;
         }
 
 
-        public DelegateBuilder Static()
+        public DelegateModel Static()
         {
             IsStatic = true;
             return this;
         }
 
-        public DelegateBuilder Sealed()
+        public DelegateModel Sealed()
         {
             IsSealed = true;
             return this;

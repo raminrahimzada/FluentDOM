@@ -1,9 +1,9 @@
 ﻿namespace FluentDOM
 {
-    public class StructBuilder
+    public class StructModel
     {
         public string StructName { get; set; }
-        public StructBuilder Name(string structName)
+        public StructModel Name(string structName)
         {
             StructName = structName;
             return this;

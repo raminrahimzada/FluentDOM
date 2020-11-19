@@ -42,22 +42,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AttributeBuilder.cs" />
-    <Compile Include="AttributeParameterBuilder.cs" />
-    <Compile Include="PropertyGetterSetterBuilder.cs" />
-    <Compile Include="ClassBuilder.cs" />
-    <Compile Include="ConstructorBuilder.cs" />
-    <Compile Include="DelegateBuilder.cs" />
-    <Compile Include="EventBuilder.cs" />
-    <Compile Include="FieldBuilder.cs" />
-    <Compile Include="InterfaceBuilder.cs" />
-    <Compile Include="MethodBuilder.cs" />
-    <Compile Include="NamespaceBuilder.cs" />
-    <Compile Include="ParameterBuilder.cs" />
+    <Compile Include="AbstractCodeExpressionModel.cs" />
+    <Compile Include="AttributeModel.cs" />
+    <Compile Include="AttributeParameterModel.cs" />
+    <Compile Include="PropertyGetterSetterModel.cs" />
+    <Compile Include="ClassModel.cs" />
+    <Compile Include="ConstructorModel.cs" />
+    <Compile Include="DelegateModel.cs" />
+    <Compile Include="EventModel.cs" />
+    <Compile Include="FieldModel.cs" />
+    <Compile Include="InterfaceModel.cs" />
+    <Compile Include="MethodModel.cs" />
+    <Compile Include="NamespaceModel.cs" />
+    <Compile Include="ParameterModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PropertyBuilder.cs" />
-    <Compile Include="StatementsBuilder.cs" />
-    <Compile Include="StructBuilder.cs" />
+    <Compile Include="PropertyModel.cs" />
+    <Compile Include="StatementCollectionModel.cs" />
+    <Compile Include="StructModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

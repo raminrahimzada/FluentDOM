@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace FluentDOM
 {
-    public class MethodBuilder
+    public class MethodModel
     {
         public bool? IsPublic { get; set; }
         public bool? IsPartial { get; set; }
@@ -19,97 +19,97 @@ namespace FluentDOM
         public bool? IsNew { get; set; }
         public string ReturnType { get; set; }
 
-        public List<ParameterBuilder> Parameters { get; set; }
-        public StatementsBuilder MethodBody { get; set; }
+        public List<ParameterModel> Parameters { get; set; }=new List<ParameterModel>();
+        public StatementCollectionModel MethodBody { get; set; }=new StatementCollectionModel();
 
 
-        public MethodBuilder Name(string methodName)
+        public MethodModel Name(string methodName)
         {
             MethodName = methodName;
             return this;
         }
 
-        public MethodBuilder Public()
+        public MethodModel Public()
         {
             IsPublic = true;
             return this;
         }
-        public MethodBuilder Private()
+        public MethodModel Private()
         {
             IsPrivate = true;
             return this;
         }
-        public MethodBuilder Internal()
+        public MethodModel Internal()
         {
             IsInternal = true;
             return this;
         }
-        public MethodBuilder Static()
+        public MethodModel Static()
         {
             IsStatic = true;
             return this;
         }
-        public MethodBuilder Override()
+        public MethodModel Override()
         {
             IsOverride = true;
             return this;
         }
-        public MethodBuilder Protected()
+        public MethodModel Protected()
         {
             IsProtected = true;
             return this;
         }
-        public MethodBuilder Sealed()
+        public MethodModel Sealed()
         {
             IsSealed = true;
             return this;
         }
-        public MethodBuilder Abstract()
+        public MethodModel Abstract()
         {
             IsAbstract = true;
             return this;
         }
-        public MethodBuilder Partial()
+        public MethodModel Partial()
         {
             IsPartial = true;
             return this;
         }
 
-        public MethodBuilder AddParameter(Action<ParameterBuilder> func)
+        public MethodModel AddParameter(Action<ParameterModel> func)
         {
-            Parameters = Parameters ?? new List<ParameterBuilder>();
-            var p = new ParameterBuilder();
+            Parameters = Parameters ?? new List<ParameterModel>();
+            var p = new ParameterModel();
             func(p);
             Parameters.Add(p);
             return this;
         }
 
-        public MethodBuilder Body(Action<StatementsBuilder> action)
+        public MethodModel Body(Action<StatementCollectionModel> action)
         {
-            MethodBody = new StatementsBuilder();
+            MethodBody = new StatementCollectionModel();
             action(MethodBody);
             return this;
         }
 
-        public MethodBuilder New()
+        public MethodModel New()
         {
             IsNew= true;
             return this;
         }
 
         
-        public MethodBuilder Returns(string returnType)
+        public MethodModel Returns(string returnType)
         {
             ReturnType = returnType;
             return this;
         }
-        public MethodBuilder Returns<T>()
+        public MethodModel Returns<T>()
         {
             ReturnType = typeof(T).FullName;
             return this;
         }
         
-        public MethodBuilder ReturnsVoid()
+        public MethodModel ReturnsVoid()
         {
             Returns(null);
             return this;

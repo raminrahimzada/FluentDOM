@@ -3,52 +3,52 @@ using System.Collections.Generic;
 
 namespace FluentDOM
 {
-    public class ParameterBuilder
+    public class ParameterModel
     {
         public string ParameterName { get; set; }
         public string ParameterType { get; set; }
         public bool? IsIn { get; set; }
         public bool? IsOut { get; set; }
         public bool? IsRef { get; set; }
-        public List<AttributeBuilder> Attributes { get; set; }
+        public List<AttributeModel> Attributes { get; set; }
 
-        public ParameterBuilder Name(string name)
+        public ParameterModel Name(string name)
         {
             ParameterName = name;
             return this;
         }
 
-        public ParameterBuilder Type(string type)
+        public ParameterModel Type(string type)
         {
             ParameterType = type;
             return this;
         }
-        public ParameterBuilder Type<T>()
+        public ParameterModel Type<T>()
         {
             ParameterType = typeof(T).FullName;
             return this;
         }
 
-        public ParameterBuilder In()
+        public ParameterModel In()
         {
             IsIn = true;
             return this;
         }
-        public ParameterBuilder Out()
+        public ParameterModel Out()
         {
             IsOut = true;
             return this;
         }
-        public ParameterBuilder Ref()
+        public ParameterModel Ref()
         {
             IsRef = true;
             return this;
         }
 
-        public ParameterBuilder AddAttribute(Action<AttributeBuilder> func)
+        public ParameterModel AddAttribute(Action<AttributeModel> func)
         {
-            Attributes = Attributes ?? new List<AttributeBuilder>();
-            var attribute = new AttributeBuilder();
+            Attributes = Attributes ?? new List<AttributeModel>();
+            var attribute = new AttributeModel();
             func(attribute);
             Attributes.Add(attribute);
             return this;

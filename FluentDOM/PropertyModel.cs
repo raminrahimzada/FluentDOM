@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace FluentDOM
 {
-    public class PropertyBuilder
+    public class PropertyModel
     {
         public bool? IsPublic { get; set; }
         public bool? IsPartial { get; set; }
@@ -16,109 +16,109 @@ namespace FluentDOM
         public bool? IsNew { get; set; }
         public string PropertyName { get; set; }
         public string PropertyType { get; set; }
-        public List<AttributeBuilder> Attributes { get; set; } = new List<AttributeBuilder>();
-        public PropertyGetterSetterBuilder Get { get; set; } = new PropertyGetterSetterBuilder();
-        public PropertyGetterSetterBuilder Set { get; set; } = new PropertyGetterSetterBuilder();
+        public List<AttributeModel> Attributes { get; set; } = new List<AttributeModel>();
+        public PropertyGetterSetterModel Get { get; set; } = new PropertyGetterSetterModel();
+        public PropertyGetterSetterModel Set { get; set; } = new PropertyGetterSetterModel();
         public bool? HasGet { get; set; }
         public bool? HasSet { get; set; }
         public bool? IsOverride { get; set; }
 
 
-        public PropertyBuilder HasGetMethod()
+        public PropertyModel HasGetMethod()
         {
             HasGet = true;
             return this;
         }
-        public PropertyBuilder HasSetMethod()
+        public PropertyModel HasSetMethod()
         {
             HasSet = true;
             return this;
         }
-        public PropertyBuilder Name(string name)
+        public PropertyModel Name(string name)
         {
             PropertyName = name;
             return this;
         }
 
-        public PropertyBuilder Type(string type)
+        public PropertyModel Type(string type)
         {
             PropertyType = type;
             return this;
         }
-        public PropertyBuilder Type<T>()
+        public PropertyModel Type<T>()
         {
             PropertyType = typeof(T).FullName;
             return this;
         }
 
-        public PropertyBuilder Public()
+        public PropertyModel Public()
         {
             IsPublic = true;
             return this;
         }
-        public PropertyBuilder Override()
+        public PropertyModel Override()
         {
             IsOverride = true;
             return this;
         }
-        public PropertyBuilder Private()
+        public PropertyModel Private()
         {
             IsPrivate = true;
             return this;
         }
-        public PropertyBuilder Protected()
+        public PropertyModel Protected()
         {
             IsProtected = true;
             return this;
         }
-        public PropertyBuilder Internal()
+        public PropertyModel Internal()
         {
             IsInternal = true;
             return this;
         }
 
-        public PropertyBuilder Getter(Action<PropertyGetterSetterBuilder> action)
+        public PropertyModel Getter(Action<PropertyGetterSetterModel> action)
         {
-            Get = new PropertyGetterSetterBuilder();
+            Get = new PropertyGetterSetterModel();
             action(Get);
             return this;
         }
-        public PropertyBuilder Setter(Action<PropertyGetterSetterBuilder> action)
+        public PropertyModel Setter(Action<PropertyGetterSetterModel> action)
         {
-            Set=new PropertyGetterSetterBuilder();
+            Set=new PropertyGetterSetterModel();
             action(Set);
             return this;
         }
 
-        public PropertyBuilder New()
+        public PropertyModel New()
         {
             IsNew = true;
             return this;
         }
-        public PropertyBuilder Partial()
+        public PropertyModel Partial()
         {
             IsPartial = true;
             return this;
         }
-        public PropertyBuilder Static()
+        public PropertyModel Static()
         {
             IsStatic = true;
             return this;
         }
-        public PropertyBuilder Sealed()
+        public PropertyModel Sealed()
         {
             IsSealed = true;
             return this;
         }
-        public PropertyBuilder Abstract()
+        public PropertyModel Abstract()
         {
             IsAbstract = true;
             return this;
         }
-        public PropertyBuilder AddAttribute(Action<AttributeBuilder> func)
+        public PropertyModel AddAttribute(Action<AttributeModel> func)
         {
-            Attributes = Attributes ?? new List<AttributeBuilder>();
-            var attribute = new AttributeBuilder();
+            Attributes = Attributes ?? new List<AttributeModel>();
+            var attribute = new AttributeModel();
             func(attribute);
             Attributes.Add(attribute);
             return this;
