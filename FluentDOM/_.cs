@@ -4,9 +4,25 @@ namespace FluentDOM
 {
     public static class _
     {
+        
+        public static CodeThrowExceptionStatement Throw(CodeExpression toThrow)
+        {
+            return new CodeThrowExceptionStatement(toThrow);
+        }
         public static CodePrimitiveExpression Primitive(object value)
         {
             return new CodePrimitiveExpression(value);
+        }
+        public static CodePrimitiveExpression Null()
+        {
+            return new CodePrimitiveExpression(null);
+        }
+       
+        public static CodeObjectCreateExpression Create<T>(params CodeExpression[] parameters)
+        {
+            var s = new CodeObjectCreateExpression(typeof(T).FullName);
+            s.Parameters.AddRange(parameters);
+            return s;
         }
         public static CodeVariableReferenceExpression Variable(string varName)
         {
@@ -39,12 +55,16 @@ namespace FluentDOM
         {
             return new CodeTypeReferenceExpression(typeof(T));
         }
-
-        public static CodeObjectCreateExpression Create<T>(params CodeExpression[] parameters)
+        public static CodeTypeReferenceExpression TypeOf<T>()
         {
-            return new CodeObjectCreateExpression(typeof(T));
-
+            return TypeOf(typeof(T).FullName);
         }
+        public static CodeTypeReferenceExpression TypeOf(string type)
+        {
+            var expression = new CodeTypeReferenceExpression(new CodeTypeReference(type));
+            return expression;
+        }
+
         public static CodeObjectCreateExpression Create(string type,params CodeExpression[] parameters)
         {
             return new CodeObjectCreateExpression(type,parameters);

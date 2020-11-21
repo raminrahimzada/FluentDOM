@@ -23,6 +23,38 @@ namespace FluentDOM
             method.ReturnType = new CodeTypeReference(typeof(T));
             return method;
         }
+        public static CodeMemberMethod Returns(this CodeMemberMethod method,string type)
+        {
+            method.ReturnType = new CodeTypeReference(type);
+            return method;
+        }
+        public static CodeMemberMethod ReturnsAsync(this CodeMemberMethod method,string type)
+        {
+            if (!string.IsNullOrEmpty(type))
+            {
+                type = "Task<" + type + ">";
+            }
+            else
+            {
+                type = "Task";
+            }
+            method.ReturnType = new CodeTypeReference(type);
+            return method;
+        }
+        public static CodeMemberMethod ReturnsAsync<T>(this CodeMemberMethod method)
+        {
+            var type = typeof(T).FullName;
+            if (!string.IsNullOrEmpty(type))
+            {
+                type = "Task<" + type + ">";
+            }
+            else
+            {
+                type = "Task";
+            }
+            method.ReturnType = new CodeTypeReference(type);
+            return method;
+        }
         public static CodeMemberMethod Attributes(this CodeMemberMethod method, MemberAttributes attribute)
         {
             method.Attributes = attribute;

@@ -45,6 +45,7 @@
     <Compile Include="CodeAttributeArgumentExtensions.cs" />
     <Compile Include="CodeAttributeDeclarationExtensions.cs" />
     <Compile Include="CodeCompileUnitExtensions.cs" />
+    <Compile Include="CodeConstructorExtensions.cs" />
     <Compile Include="CodeEntryPointMethodExtensions.cs" />
     <Compile Include="CodeExpressionBuilder.cs" />
     <Compile Include="CodeMemberFieldExtensions.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="CodeStatementCollectionBuilder.cs" />
     <Compile Include="CodeTypeDeclarationExtensions.cs" />
     <Compile Include="CodeParameterDeclarationExpressionExtensions.cs" />
+    <Compile Include="CodeTypeParameterExtensions.cs" />
     <Compile Include="CodeVariableDeclarationStatementExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CodeStatementBuilder.cs" />

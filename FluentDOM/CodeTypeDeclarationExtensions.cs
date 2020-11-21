@@ -21,6 +21,29 @@ namespace FluentDOM
             classType.Name = name;
             return classType;
         }
+        public static CodeTypeDeclaration Extends(this CodeTypeDeclaration classType, string typeName)
+        {
+            classType.BaseTypes.Add(new CodeTypeReference(typeName));
+            return classType;
+        }
+        public static CodeTypeDeclaration ExtendsGeneric(this CodeTypeDeclaration classType, string typeName,params string[] typeArgs)
+        {
+            var type = new CodeTypeReference(typeName);
+            foreach (var typeArg in typeArgs)
+            {
+                type.TypeArguments.Add(new CodeTypeReference(typeArg));
+            }
+
+            classType.BaseTypes.Add(type);
+            return classType;
+        }
+        public static CodeTypeDeclaration AddTypeParameter(this CodeTypeDeclaration classType, Action<CodeTypeParameter> action)
+        {
+            var p = new CodeTypeParameter();
+            action(p);
+            classType.TypeParameters.Add(p);
+            return classType;
+        }
         public static CodeTypeDeclaration AddMethod(this CodeTypeDeclaration classType, Action<CodeMemberMethod> func)
         {
             var m = new CodeMemberMethod();

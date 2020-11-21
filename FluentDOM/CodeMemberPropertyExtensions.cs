@@ -15,6 +15,10 @@ namespace FluentDOM
             property.Name = name;
             return property;
         }
+        public static CodeMemberProperty Name<T>(this CodeMemberProperty property, string name)
+        {
+            return property.Name(name).OfType<T>();
+        }
         public static CodeMemberProperty OfType<T>(this CodeMemberProperty property)
         {
             property.Type = new CodeTypeReference(typeof(T));

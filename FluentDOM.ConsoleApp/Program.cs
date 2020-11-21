@@ -2,8 +2,6 @@
 using System.CodeDom;
 using System.IO;
 using System.Reflection;
-using Microsoft.CSharp;
-using Newtonsoft.Json;
 
 namespace FluentDOM.ConsoleApp
 {
@@ -13,92 +11,121 @@ namespace FluentDOM.ConsoleApp
         {
             var unit = new CodeNamespace("CodeDOMSample")
                     .Import("System")
-                    //class
-                    .AddClass(c => c
-                        .Name("CodeDOMCreatedClass")
-                        .TypeAttributes(TypeAttributes.Public | TypeAttributes.Sealed)
-                        //fields
-                        .AddField(f => f.Name("widthValue").OfType<double>().Attributes(MemberAttributes.Private)
-                            .AddComment("The width of the object."))
-                        .AddField(f => f.Name("heightValue").OfType<double>().Attributes(MemberAttributes.Private)
-                            .AddComment("The height of the object."))
-                        //property 1
-                        .AddProperty(p => p
-                            .Name("Width")
-                            .Attributes(MemberAttributes.Public | MemberAttributes.Final)
-                            .OfType<double>()
-                            .AddComment("The Width property for the object.")
-                            .Get(s => s.Return(_.Field(_.This(), "widthValue")))
-                            .Set(null))
-                        //property 2
-                        .AddProperty(p => p
-                            .Name("Height")
-                            .Attributes(MemberAttributes.Public | MemberAttributes.Final)
-                            .OfType<double>()
-                            .AddComment("The Height property for the object.")
-                            .Get(g => g.Return(_.Field(_.This(), "heightValue")))
-                            .Set(null))
-                        //property 3
-                        .AddProperty(p => p
-                            .Name("Area")
-                            .Attributes(MemberAttributes.Public | MemberAttributes.Final)
-                            .OfType<double>()
-                            .AddComment("The Area property for the object.")
+                    .Import("System.Threading.Tasks")
+                    .AddInterface(i=>i
+                        .Name("ICommandHandler")
+                        .AddTypeParameter(p=>p
+                            .Name("TCommand")
+                            .HasConstructorConstraint(true)
+                            .AddConstraint("AbstractCommand")
+                        )
+                        .AddMethod(m=>m
+                            .Name("Handle")
+                            .AddParameter(p=>p.Name("command").OfType("Command"))
+                            .ReturnsAsync("ResponseModel")
+                        )
+                    )
+                    .AddClass(c=>c
+                        .Name("LoginCommand")
+                        .Extends("AbstractCommand")
+                        .AddField(f=>f.Name<string>("_username").AddComment("backing field of _username"))
+                        .AddField(f=>f.Name<string>("_password").AddComment("backing field of _password"))
+                        .AddProperty(p=>p
+                            .Name<string>("Username")
+                            .Attributes(MemberAttributes.Public|MemberAttributes.Final)
                             .Get(g =>
                             {
-                                var w = _.Field(_.This(), "widthValue");
-                                var h = _.Field(_.This(), "heightValue");
-                                g.Return(_.Binary(w, CodeBinaryOperatorType.Multiply, h));
+                                g.Return(_.Field(_.This(),"_username"));
                             })
-                            .Set(null))
-
-                        //method 1
-                        .AddMethod(m => m.Name("ToString")
-                            .Returns<string>()
-                            .Attributes(MemberAttributes.Public | MemberAttributes.Override)
-                            .AddStatement(s =>
-                        {
-                            var w = _.Field(_.This(), "widthValue");
-                            var h = _.Field(_.This(), "heightValue");
-                            var formattedOutput = "The object:" + Environment.NewLine +
-                                                  " width = {0}," + Environment.NewLine +
-                                                  " height = {1}," + Environment.NewLine +
-                                                  " area = {2}";
-                            var returnEx = _.Invoke(
-                                _.Type<string>(),
-                                nameof(string.Format),
-                                _.Primitive(formattedOutput),
-                                w, h
-                            );
-                            s.Return(returnEx);
-                        }))
-
-                        //constructor
-                        .AddConstructor(ctor => ctor
+                        )
+                        .AddProperty(p=>p
+                            .Name<string>("Password")
                             .Attributes(MemberAttributes.Public | MemberAttributes.Final)
-                            .AddParameter(p => p.Name("width").OfType<double>())
-                            .AddParameter(p => p.Name("height").OfType<double>())
+                            .Get(g =>
+                            {
+                                g.Return(_.Field(_.This(), "_password"));
+                            })
+                        )
+                        .AddConstructor(ctor => ctor
+                            .AddBaseConstructorArg(_.Variable("id"))
+                            .Attributes(MemberAttributes.Public)
+                            .AddParameter(p=>p.Name<Guid>("id"))
+                            .AddParameter(p=>p.Name<string>("username"))
+                            .AddParameter(p=>p.Name<string>("password"))
+                            .AddStatement(action: s => s.Assign(_.Field(_.This(), "username"), _.Variable("username")))
+                            .AddStatement(action: s => s.Assign(_.Field(_.This(), "password"), _.Variable("password")))
+                        )
+                    )
+                    .AddClass(c=>c
+                        .Name("LoginCommandHandler")
+                        .ExtendsGeneric("ICommandHandler", "LoginCommand")
+                        .AddMethod(m=>m
+                            .Name("Handle")
+                            .Attributes(MemberAttributes.Public|MemberAttributes.Override)
+                            .ReturnsAsync("ResponseModel")
+                            .AddParameter(p=>p
+                                .Name("command")
+                                .OfType("LoginCommand")
+                            )
                             .AddStatement(s =>
                             {
-                                var thisW = _.Field(_.This(), "widthValue");
-                                var w = _.Variable("width");
-                                s.Assign(thisW, w);
+                                var cc = _.Variable("command");
+                                var condition = _.Binary(cc, CodeBinaryOperatorType.IdentityEquality, _.Null());
+                                s.If(condition)
+                                    .AddTrueStatement(_.Throw(_.Create<ArgumentNullException>(_.Primitive("command"))));
                             })
                             .AddStatement(s =>
                             {
-                                var thisH = _.Field(_.This(), "heightValue");
-                                var h = _.Variable("height");
-                                s.Assign(thisH, h);
-                            }))
+                                var c1 = _.Binary(_.Variable("command.Username"),
+                                    CodeBinaryOperatorType.IdentityEquality, _.Primitive("admin"));
+                                
+                                var c2 = _.Binary(_.Variable("command.Password"),
+                                    CodeBinaryOperatorType.IdentityEquality, _.Primitive("admin"));
 
-                        //entry point
-                        .AddEntryPoint(m =>
-                        {
-                            var create = _.Create("CodeDOMCreatedClass", _.Primitive(5.3), _.Primitive(6.9));
-                            m.AddStatement(_.Declare("testClass").OfType("CodeDOMCreatedClass").Init(create));
-                            var toStringInvoke = _.Invoke(_.Variable("testClass"), "ToString");
-                            m.AddStatement(_.Invoke(_.Type("System.Console"), "WriteLine", toStringInvoke));
-                        })
+                                var condition = _.Binary(c1, CodeBinaryOperatorType.BooleanAnd, c2);
+                                var success = _.Invoke(_.Type("ResponseModel"), "Success", _.Primitive("Welcome"));
+
+                                s.If(condition)
+                                    .AddTrueStatement(ss => ss.Return(success))
+                                    .AddFalseStatement(_.Throw(_.Create<Exception>(_.Primitive("invalid username or password"))));
+                            })
+                        )
+                    )
+                    //class Program
+                    .AddClass(c => c
+                        .Name("Program")
+                        .TypeAttributes(TypeAttributes.Public)
+                        .Attributes(MemberAttributes.New)
+                        .AddMethod(m => m
+                            .Name("Main")
+                            .Attributes(MemberAttributes.Public|MemberAttributes.Final|MemberAttributes.Static)
+                            .AddParameter(p => p
+                                .Name("args")
+                                .OfType<string[]>()
+                            )
+                            .AddStatement(s=>s
+                                .Declare("command")
+                                .OfType("LoginCommand")
+                                .Init(_.Create("LoginCommand").AddParameters(_.Primitive("admin"),_.Primitive("123")))
+                            )
+                            .AddStatement(s=>s
+                                .Declare("handler")
+                                .OfType("LoginCommandHandler")
+                                .Init(_.Create("LoginCommandHandler"))
+                            )
+                            .AddStatement(s =>
+                            {
+                                var init = _.Invoke(_.Variable("handler"), "Handle", _.Variable("command"));
+                                s
+                                    .Declare("response")
+                                    .OfType("ResponseModel")
+                                    .Init(init);
+                            })
+                            .AddStatement(s=>s
+                                .Return(_.Primitive(0))
+                            )
+
+                        )
                     )
                 ;
             File.WriteAllText("lib.cs", unit.GenerateCSharpCode());

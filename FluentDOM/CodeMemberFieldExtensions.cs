@@ -9,6 +9,10 @@ namespace FluentDOM
             field.Name = name;
             return field;
         }
+        public static CodeMemberField Name<T>(this CodeMemberField field, string name)
+        {
+            return field.Name(name).OfType<T>();
+        }
         public static CodeMemberField OfType<T>(this CodeMemberField field)
         {
             field.Type = new CodeTypeReference(typeof(T));

@@ -3,6 +3,14 @@ using System.CodeDom;
 
 namespace FluentDOM
 {
+    public static class CodeObjectCreateExpressionExtensions
+    {
+        public static CodeObjectCreateExpression AddParameters(this CodeObjectCreateExpression expression, params CodeExpression[] c)
+        {
+            expression.Parameters.AddRange(c);
+            return expression;
+        }
+    }
     public static class CodeVariableDeclarationStatementExtensions
     {
         public static CodeVariableDeclarationStatement OfType<T>(this CodeVariableDeclarationStatement statement)
