@@ -19,9 +19,20 @@ namespace FluentDOM
             parameter.Constraints.Add(type);
             return parameter;
         }
+        public static CodeTypeParameter AddConstraint(this CodeTypeParameter parameter, CodeTypeReference type)
+        {
+            parameter.Constraints.Add(type);
+            return parameter;
+        }
         public static CodeTypeParameter AddConstraint<T>(this CodeTypeParameter parameter)
         {
             parameter.Constraints.Add(typeof(T));
+            return parameter;
+        }
+
+        public static CodeTypeParameter AddConstraint(this CodeTypeParameter parameter, CodeTypeReferenceExpression type)
+        {
+            parameter.Constraints.Add(type.Type);
             return parameter;
         }
     }

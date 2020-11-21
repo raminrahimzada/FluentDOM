@@ -28,5 +28,6 @@ namespace FluentDOM
             statement.InitExpression = expression;
             return statement;
         }
+        
     }
 }

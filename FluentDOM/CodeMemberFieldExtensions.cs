@@ -18,6 +18,11 @@ namespace FluentDOM
             field.Type = new CodeTypeReference(typeof(T));
             return field;
         }
+        public static CodeMemberField OfType(this CodeMemberField field,string type)
+        {
+            field.Type = new CodeTypeReference(type);
+            return field;
+        }
         public static CodeMemberField Attributes(this CodeMemberField field, MemberAttributes attributes)
         {
             field.Attributes = attributes;

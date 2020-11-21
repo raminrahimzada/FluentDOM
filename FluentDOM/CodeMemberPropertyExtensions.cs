@@ -24,6 +24,11 @@ namespace FluentDOM
             property.Type = new CodeTypeReference(typeof(T));
             return property;
         }
+        public static CodeMemberProperty OfType(this CodeMemberProperty property,string type)
+        {
+            property.Type = new CodeTypeReference(type);
+            return property;
+        }
         public static CodeMemberProperty AddComment(this CodeMemberProperty property,string comment)
         {
             property.Comments.Add(new CodeCommentStatement(comment));

@@ -4,10 +4,14 @@ using System.IO;
 using System.Text;
 using Microsoft.CSharp;
 
-namespace FluentDOM.ConsoleApp
+namespace FluentDOM
 {
     public static class ModelExtensions
     {
+        public static void WriteToFile(this string content, string file)
+        {
+            File.WriteAllText(file, content);
+        }
         public static string GenerateCSharpCode(this CodeCompileUnit compileUnit)
         {
             var provider = new CSharpCodeProvider();

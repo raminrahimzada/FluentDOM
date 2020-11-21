@@ -30,10 +30,10 @@ namespace FluentDOM.Tests
                         .AddStatement(s => s
                             .Declare("name")
                             .OfType<string>()
-                            .Init(_.Invoke(null, "Console.ReadLine"))
+                            .Init(_.Invoke(_.Type(typeof(Console).FullName), nameof(Console.ReadLine)))
                         )
                         .AddStatement(s => s
-                            .Invoke(null, "Console.WriteLine", _.Primitive("Hello - {0}"), _.Variable("name"))
+                            .Invoke(_.Type(typeof(Console).FullName), nameof(Console.WriteLine), _.Primitive("Hello - {0}"), _.Variable("name"))
                         )
                         .AddStatement(
                             s => s
@@ -49,8 +49,8 @@ namespace example1 {
     public class Program {
         
         public static void Main(string[] args) {
-            string name = Console.ReadLine();
-            Console.WriteLine(""Hello - {0}"", name);
+            string name = System.Console.ReadLine();
+            System.Console.WriteLine(""Hello - {0}"", name);
             return 0;
         }
     }

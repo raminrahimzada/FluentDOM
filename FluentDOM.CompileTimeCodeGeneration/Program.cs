@@ -13,42 +13,42 @@ using System.IO;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-namespace FluentDOM.ConsoleApp
+namespace FluentDOM.CompileTimeCodeGeneration
 {
-    public class Program
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
             var unit = new CodeNamespace("CodeDOMSample")
                     .Import("System")
                     .Import("System.Threading.Tasks")
-                    .AddInterface(i=>i
+                    .AddInterface(i => i
                         .Name("ICommandHandler")
-                        .AddTypeParameter(p=>p
+                        .AddTypeParameter(p => p
                             .Name("TCommand")
                             .HasConstructorConstraint(true)
                             .AddConstraint("AbstractCommand")
                         )
-                        .AddMethod(m=>m
+                        .AddMethod(m => m
                             .Name("Handle")
-                            .AddParameter(p=>p.Name("command").OfType("Command"))
+                            .AddParameter(p => p.Name("command").OfType("Command"))
                             .ReturnsAsync("ResponseModel")
                         )
                     )
-                    .AddClass(c=>c
+                    .AddClass(c => c
                         .Name("LoginCommand")
                         .Extends("AbstractCommand")
-                        .AddField(f=>f.Name<string>("_username").AddComment("backing field of _username"))
-                        .AddField(f=>f.Name<string>("_password").AddComment("backing field of _password"))
-                        .AddProperty(p=>p
+                        .AddField(f => f.Name<string>("_username").AddComment("backing field of _username"))
+                        .AddField(f => f.Name<string>("_password").AddComment("backing field of _password"))
+                        .AddProperty(p => p
                             .Name<string>("Username")
-                            .Attributes(MemberAttributes.Public|MemberAttributes.Final)
+                            .Attributes(MemberAttributes.Public | MemberAttributes.Final)
                             .Get(g =>
                             {
-                                g.Return(_.Field(_.This(),"_username"));
+                                g.Return(_.Field(_.This(), "_username"));
                             })
                         )
-                        .AddProperty(p=>p
+                        .AddProperty(p => p
                             .Name<string>("Password")
                             .Attributes(MemberAttributes.Public | MemberAttributes.Final)
                             .Get(g =>
@@ -59,21 +59,21 @@ namespace FluentDOM.ConsoleApp
                         .AddConstructor(ctor => ctor
                             .AddBaseConstructorArg(_.Variable("id"))
                             .Attributes(MemberAttributes.Public)
-                            .AddParameter(p=>p.Name<Guid>("id"))
-                            .AddParameter(p=>p.Name<string>("username"))
-                            .AddParameter(p=>p.Name<string>("password"))
+                            .AddParameter(p => p.Name<Guid>("id"))
+                            .AddParameter(p => p.Name<string>("username"))
+                            .AddParameter(p => p.Name<string>("password"))
                             .AddStatement(action: s => s.Assign(_.Field(_.This(), "username"), _.Variable("username")))
                             .AddStatement(action: s => s.Assign(_.Field(_.This(), "password"), _.Variable("password")))
                         )
                     )
-                    .AddClass(c=>c
+                    .AddClass(c => c
                         .Name("LoginCommandHandler")
                         .ExtendsGeneric("ICommandHandler", "LoginCommand")
-                        .AddMethod(m=>m
+                        .AddMethod(m => m
                             .Name("Handle")
-                            .Attributes(MemberAttributes.Public|MemberAttributes.Override)
+                            .Attributes(MemberAttributes.Public | MemberAttributes.Override)
                             .ReturnsAsync("ResponseModel")
-                            .AddParameter(p=>p
+                            .AddParameter(p => p
                                 .Name("command")
                                 .OfType("LoginCommand")
                             )
@@ -88,7 +88,7 @@ namespace FluentDOM.ConsoleApp
                             {
                                 var c1 = _.Binary(_.Variable("command.Username"),
                                     CodeBinaryOperatorType.IdentityEquality, _.Primitive("admin"));
-                                
+
                                 var c2 = _.Binary(_.Variable("command.Password"),
                                     CodeBinaryOperatorType.IdentityEquality, _.Primitive("admin"));
 
@@ -108,17 +108,17 @@ namespace FluentDOM.ConsoleApp
                         .Attributes(MemberAttributes.New)
                         .AddMethod(m => m
                             .Name("Main")
-                            .Attributes(MemberAttributes.Public|MemberAttributes.Final|MemberAttributes.Static)
+                            .Attributes(MemberAttributes.Public | MemberAttributes.Final | MemberAttributes.Static)
                             .AddParameter(p => p
                                 .Name("args")
                                 .OfType<string[]>()
                             )
-                            .AddStatement(s=>s
+                            .AddStatement(s => s
                                 .Declare("command")
                                 .OfType("LoginCommand")
-                                .Init(_.Create("LoginCommand").AddParameters(_.Primitive("admin"),_.Primitive("123")))
+                                .Init(_.Create("LoginCommand").AddParameters(_.Primitive("admin"), _.Primitive("123")))
                             )
-                            .AddStatement(s=>s
+                            .AddStatement(s => s
                                 .Declare("handler")
                                 .OfType("LoginCommandHandler")
                                 .Init(_.Create("LoginCommandHandler"))
@@ -131,14 +131,12 @@ namespace FluentDOM.ConsoleApp
                                     .OfType("ResponseModel")
                                     .Init(init);
                             })
-                            .AddStatement(s=>s
+                            .AddStatement(s => s
                                 .Return(_.Primitive(0))
                             )
 
                         )
                     )
-                ;
-            File.WriteAllText("lib.cs", unit.GenerateCSharpCode());
         }
     }
 }

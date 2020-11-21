@@ -37,6 +37,11 @@ namespace FluentDOM
             classType.BaseTypes.Add(type);
             return classType;
         }
+        public static CodeTypeDeclaration ExtendsGeneric(this CodeTypeDeclaration classType, CodeTypeReference type)
+        {
+            classType.BaseTypes.Add(type);
+            return classType;
+        }
         public static CodeTypeDeclaration AddTypeParameter(this CodeTypeDeclaration classType, Action<CodeTypeParameter> action)
         {
             var p = new CodeTypeParameter();
@@ -81,7 +86,10 @@ namespace FluentDOM
         }
 
 
-
-
-   }
+        public static CodeTypeDeclaration Extends(this CodeTypeDeclaration classType, CodeTypeReference typeReference)
+        {
+            classType.BaseTypes.Add(typeReference);
+            return classType;
+        }
+    }
 }

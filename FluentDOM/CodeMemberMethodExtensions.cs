@@ -41,6 +41,17 @@ namespace FluentDOM
             method.ReturnType = new CodeTypeReference(type);
             return method;
         }
+        public static CodeMemberMethod ReturnsGeneric(this CodeMemberMethod method,string type,params string[] genericTypes)
+        {
+            var t = new CodeTypeReference(type);
+            foreach (var genericType in genericTypes)
+            {
+                t.TypeArguments.Add(genericType);
+            }
+
+            method.ReturnType = t;
+            return method;
+        }
         public static CodeMemberMethod ReturnsAsync<T>(this CodeMemberMethod method)
         {
             var type = typeof(T).FullName;
