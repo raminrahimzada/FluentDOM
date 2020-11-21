@@ -33,5 +33,11 @@ namespace FluentDOM
             field.Comments.Add(new CodeCommentStatement(comment));
             return field;
         }
+
+        public static CodeMemberField OfType(this CodeMemberField field, CodeTypeReference type)
+        {
+            field.Type = type;
+            return field;
+        }
     }
 }

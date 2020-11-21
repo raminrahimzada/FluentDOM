@@ -77,10 +77,28 @@ namespace FluentDOM
             classType.Members.Add(f);
             return classType;
         }
+
         public static CodeTypeDeclaration AddProperty(this CodeTypeDeclaration classType, Action<CodeMemberProperty> func)
         {
             var p = new CodeMemberProperty();
             func(p);
+            classType.Members.Add(p);
+            return classType;
+        }
+
+        public static CodeTypeDeclaration AddPropertyDefault(this CodeTypeDeclaration classType,
+            Action<CodeMemberProperty> func)
+        {
+            var p = new CodeMemberProperty();
+            func(p);
+            var fieldName = "_" + p.Name.ToLower().FirstToLower();
+            classType.AddField(f => f.Name(fieldName).OfType(p.Type));
+            p.Set(s => s
+                    .Assign(_.Field(_.This(), fieldName), _.Variable("value"))
+                )
+                .Get(g => g
+                    .Return(_.Field(_.This(), fieldName))
+                );
             classType.Members.Add(p);
             return classType;
         }

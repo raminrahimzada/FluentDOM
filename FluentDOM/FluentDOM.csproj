@@ -57,7 +57,7 @@
     <Compile Include="CodeParameterDeclarationExpressionExtensions.cs" />
     <Compile Include="CodeTypeParameterExtensions.cs" />
     <Compile Include="CodeVariableDeclarationStatementExtensions.cs" />
-    <Compile Include="ModelExtensions.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CodeStatementBuilder.cs" />
     <Compile Include="_.cs" />

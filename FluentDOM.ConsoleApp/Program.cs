@@ -2,17 +2,7 @@
 using System.CodeDom;
 using System.IO;
 using System.Reflection;
-using System.Runtime.Serialization;
-using System.Text;
-using Microsoft.CodeAnalysis.CSharp;
-using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
-using System;
-using System.CodeDom;
-using System.CodeDom.Compiler;
-using System.IO;
-using System.Text;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
+
 namespace FluentDOM.ConsoleApp
 {
     public class Program

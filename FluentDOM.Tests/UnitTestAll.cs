@@ -1,7 +1,6 @@
 ﻿using System;
 using System.CodeDom;
 using System.Reflection;
-using FluentDOM.ConsoleApp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FluentDOM.Tests
